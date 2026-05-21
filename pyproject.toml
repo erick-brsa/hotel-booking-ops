@@ -5,9 +5,12 @@ description = "Data quality and processing pipeline for hotel booking reservatio
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "ipykernel>=7.2.0",
     "matplotlib>=3.10.9",
+    "missingno>=0.5.2",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
+    "pathlib>=1.0.1",
     "plotly>=6.7.0",
     "polars>=1.40.1",
     "recordlinkage>=0.14",

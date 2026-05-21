@@ -120,5 +120,3 @@ El proyecto sigue un flujo estructurado de Calidad de Datos compuesto por las si
 - Pandas
 - NumPy
 - UV (*Python package and environment manager*)
-
----
