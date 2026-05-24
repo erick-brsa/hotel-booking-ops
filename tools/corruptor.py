@@ -1,5 +1,5 @@
 """
-Script para generar `fuente_2_agencia.csv` a partir de `hotel_booking.csv`.
+Script para generar `fuente_2_agencia.csv` a partir de `internal_bookings.csv`.
 Simula la base de datos de una agencia de viajes externa con:
   - Modelo canónico (renombrado de columnas)
   - Ruido e inconsistencias para practicar limpieza de datos
@@ -22,9 +22,9 @@ np.random.seed(42)
 # Definición de rutas
 BASE_DIR = Path(__file__).resolve().parent.parent
 # APUNTA AL EXISTENTE:
-INPUT_PATH = BASE_DIR / "data" / "raw" / "hotel_booking.csv"
+INPUT_PATH = BASE_DIR / "data" / "raw" / "internal_bookings.csv"
 # APUNTA AL QUE SE VA A CREAR:
-OUTPUT_PATH = BASE_DIR / "data" / "raw" / "fuente_2_agencia.csv"
+OUTPUT_PATH = BASE_DIR / "data" / "raw" / "external_bookings.csv"
 
 # Lee el archivo fuente
 df_original = pd.read_csv(INPUT_PATH)
@@ -35,9 +35,9 @@ df = df_original.sample(frac=1, random_state=42).reset_index(drop=True)
 print(f"[OK] Dataset cargado: {df.shape[0]} filas × {df.shape[1]} columnas")
 
 
-# ──────────────────────────────────────────────
+# ─────────────────────────────────────────────────
 # 2. TRANSFORMACIÓN DE ESTRUCTURA (MODELO CANÓNICO)
-# ──────────────────────────────────────────────
+# ─────────────────────────────────────────────────
 
 # Renombra 8+ columnas clave para simular un sistema externo distinto
 rename_map = {
@@ -53,7 +53,7 @@ rename_map = {
     "reservation_status":           "estado_reserva",
     "reservation_status_date":      "fecha_estado_reserva",
     "lead_time":                    "dias_anticipacion",
-    "total_of_special_requests":    "solicitudes_especiales",
+    "total_of_special_requests":    "total_solicitudes_especiales",
 }
 df.rename(columns=rename_map, inplace=True)
 
@@ -191,19 +191,9 @@ print(f"[OK] 'is_canceled' intacta: {df['is_canceled'].value_counts().to_dict()}
 # 5. EXPORTACIÓN
 # ──────────────────────────────────────────────
 
-# Mezcla el orden de las filas para que no coincida con el archivo original
-df = df.sample(frac=1, random_state=42).reset_index(drop=True)
-
 # Guarda el resultado sin incluir el índice de pandas
 df.to_csv(OUTPUT_PATH, index=False)
 
 print(f"\n[LISTO] Archivo exportado → {OUTPUT_PATH}")
 print(f"        Dimensiones finales: {df.shape[0]} filas × {df.shape[1]} columnas")
 print(f"        Columnas: {df.columns.tolist()}")
-
-
-# import missingno as msno
-# import matplotlib.pyplot as plt
-# msno.matrix(df.head(5000))
-# plt.ti}tle("Matriz de valores nulos")
-# plt.show()
