@@ -73,12 +73,26 @@ uv sync
 
 El pipeline se ejecuta secuencialmente siguiendo los notebooks en orden:
 
-1. `01_perfilado.ipynb` - Análisis exploratorio y diagnóstico de cada fuente.
-2. `02_limpieza_estandarizacion.ipynb` - Limpieza individual, imputación de nulos y estandarización hacia el modelo canónico.
-3. `03_integracion.ipynb` - Unión de ambas fuentes en un solo dataset.
-4. `04_record_linkage.ipynb` - Identificación y fusión de clientes duplicados entre fuentes.
-5. `05_analisis_modelos.ipynb` - Entrenamiento de modelos (Random Forest, K-Means) para responder preguntas de negocio.
-6. `06_dqs_final.ipynb` - Cálculo del índice de calidad (DQS) y comparación pre/post proceso.
+1. **`01_perfilado_inicial.ipynb`**  
+   Perfilado individual de cada fuente original (sistema interno y canales externos). Se generan reportes automáticos con `sweetviz` y se calculan las métricas iniciales del índice de calidad (DQS).
+
+2. **`02_limpieza_estandarizacion.ipynb`**  
+   Limpieza individual de cada fuente: renombrado de columnas (español → inglés), unificación de formatos de fecha, homologación de estatus, imputación de nulos con KNN (numéricas) y moda (categóricas), y validación de rangos numéricos. Los datos limpios se guardan por separado.
+
+3. **`03_integracion.ipynb`**  
+   Unión vertical de ambas fuentes ya limpias en un solo dataset (`unified_dataset.csv`).
+
+4. **`04_perfilado_integrado.ipynb`**  
+   Perfilado del dataset unificado para identificar duplicados entre fuentes y medir el estado previo al Record Linkage.
+
+5. **`05_record_linkage.ipynb`**  
+   Identificación y fusión de clientes duplicados entre fuentes mediante comparación difusa (distancia de Levenshtein) y bloqueo por email. Se genera el dataset consolidado final.
+
+6. **`06_analisis_modelos.ipynb`**  
+   Entrenamiento de modelos para responder las preguntas de negocio: Random Forest (factores de cancelación y clasificación alto/bajo valor) y K-Means (perfiles de huéspedes recurrentes).
+
+7. **`07_dqs_final.ipynb`**  
+   Cálculo del índice de calidad final (DQS) sobre el dataset consolidado, comparación con las métricas iniciales y visualización de la mejora.
 
 ## 6. Metodología
 
@@ -103,4 +117,3 @@ El impacto se cuantificó mediante un **índice de calidad (DQS)** aplicado ante
 - Jupyter Notebooks
 - UV (Python package and environment manager)
 - Draw.io (diagrama de integración)
-```
